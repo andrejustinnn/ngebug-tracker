@@ -3,8 +3,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 const createIssueSchema = z.object({
-  title: z.string().min(1).max(255),
-  description: z.string().min(1),
+  title: z.string().min(1, "Title is required.").max(255),
+  description: z.string().min(1, "Description is required."),
+  // kosongkan second argument untuk menggunakan pesan default
 });
 
 export async function GET() {
@@ -20,7 +21,9 @@ export async function POST(request: NextRequest) {
 
   // is invalidate
   if (!validation.success)
-    return NextResponse.json(validation.error.errors, { status: 400 });
+    // validation.error.errors is an array of errors too complex
+    // we can use format() to get a human-readable error message
+    return NextResponse.json(validation.error.format(), { status: 400 });
 
   // Create the issue in the database
   const newIssue = await prisma.issue.create({

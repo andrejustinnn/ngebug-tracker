@@ -7,6 +7,8 @@ import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { AlertDestructive } from "@/components/blocks/AlertDescructive";
 
 // 1. define the interface for the form
 interface IssueForm {
@@ -16,6 +18,7 @@ interface IssueForm {
 
 const NewIssuePage = () => {
   const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
 
   // 2. use the form hook and set the type or shape of the form
   const { register, control, handleSubmit } = useForm<IssueForm>();
@@ -26,46 +29,52 @@ const NewIssuePage = () => {
   // CASE!
   // kita menggunakan library md editor, tapi tidak bisa secara langsung mengunakan function register maka kita harus menggunakan controller
 
+  const submitForm = async (data: IssueForm) => {
+    try {
+      const response = await axios.post("/api/issues", data);
+
+      router.push("/issues");
+    } catch (error) {
+      setError("Ups! Something went wrong. Please try again later.");
+    }
+  };
+
   return (
-    <form
-      className="space-y-4 max-w-xl"
-      onSubmit={handleSubmit(async (data) => {
-        await axios.post("/api/issues", data);
-        router.push("/issues");
-      })}
-    >
-      <h1 className="text-2xl font-semibold">Create a new issue</h1>
-      <div className="space-y-2">
-        <Label htmlFor="title">Title</Label>
-        <Input
-          type="text"
-          id="title"
-          placeholder="ex: We have some bugs"
-          {...register("title")}
-        />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="description">Description</Label>
-        <Controller
-          name="description"
-          control={control}
-          render={({ field }) => (
-            <SimpleMDE
-              // field samaa dengan register
-              // value={field.value}
-              // onChange={field.onChange}
-              // onBlur={field.onBlur}
-              {...field}
-              placeholder="ex: We have some bugs in the system that need to be fixed"
-            />
-          )}
-        />
-      </div>
-      <div className="space-x-4 text-right">
-        <Button variant="outline">Cancel</Button>
-        <Button>Create Issue</Button>
-      </div>
-    </form>
+    <div className="max-w-xl space-y-6">
+      {error && <AlertDestructive message={error} />}
+      <form className="space-y-4" onSubmit={handleSubmit(submitForm)}>
+        <div className="space-y-2">
+          <Label htmlFor="title">Title</Label>
+          <Input
+            type="text"
+            id="title"
+            placeholder="ex: We have some bugs"
+            {...register("title")}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="description">Description</Label>
+          <Controller
+            name="description"
+            control={control}
+            render={({ field }) => (
+              <SimpleMDE
+                // field samaa dengan register
+                // value={field.value}
+                // onChange={field.onChange}
+                // onBlur={field.onBlur}
+                {...field}
+                placeholder="ex: We have some bugs in the system that need to be fixed"
+              />
+            )}
+          />
+        </div>
+        <div className="space-x-4 text-right">
+          <Button variant="outline">Cancel</Button>
+          <Button>Create Issue</Button>
+        </div>
+      </form>
+    </div>
   );
 };
 
