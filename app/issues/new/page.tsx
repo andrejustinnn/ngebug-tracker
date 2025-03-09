@@ -19,6 +19,7 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createIssueSchema } from "@/app/validationSchema";
 import { z } from "zod";
+import { LoadingSpinner } from "@/components/blocks/LoadingSpinner";
 
 type IssueForm = z.infer<typeof createIssueSchema>;
 
@@ -83,7 +84,9 @@ const NewIssuePage = () => {
           />
           <div className="flex space-x-4">
             <Button variant="outline">Cancel</Button>
-            <Button type="submit">Submit</Button>
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              {form.formState.isSubmitting ? <LoadingSpinner /> : "Submit"}
+            </Button>
           </div>
         </form>
       </Form>
