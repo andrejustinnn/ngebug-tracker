@@ -3,14 +3,14 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import SimpleMDE from "react-simplemde-editor";
+// import SimpleMDE from "react-simplemde-editor";
+import dynamic from "next/dynamic";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
@@ -20,6 +20,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createIssueSchema } from "@/app/validationSchema";
 import { z } from "zod";
 import { LoadingSpinner } from "@/components/blocks/LoadingSpinner";
+
+const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
+  ssr: false, // not to render the component on the server
+});
 
 type IssueForm = z.infer<typeof createIssueSchema>;
 
