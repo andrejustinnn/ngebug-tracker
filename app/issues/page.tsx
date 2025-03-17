@@ -1,4 +1,4 @@
-import { prisma } from "@/prisma/client";
+import { ButtonLink, IssueStatusBadge } from "@/components/blocks"
 import {
   Table,
   TableBody,
@@ -8,15 +8,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React from "react";
-import IssueStatusBadge from "@/components/blocks/IssueStatusBadge";
-import ButtonLink from "@/components/blocks/ButtonLink";
-import delay from "delay";
+import { prisma } from "@/prisma/client";
+// import delay from "delay";
 import IssueAction from "./IssueAction";
 
 const IssuesPage = async () => {
   const issues = await prisma.issue.findMany();
-  await delay(2000);
+  // await delay(2000);
   return (
     <div className="space-y-6">
       <IssueAction />

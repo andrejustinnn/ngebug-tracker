@@ -1,8 +1,7 @@
 import { Card, CardContent } from '@/components/ui/card'
 import Flex from '@/components/ui/flex'
 import React from 'react'
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
+import { Skeleton } from '@/components/blocks'
 
 const LoadingIssueDetailPage = () => {
   return (

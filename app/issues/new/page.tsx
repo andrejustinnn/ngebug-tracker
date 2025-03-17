@@ -22,7 +22,7 @@ import { z } from "zod";
 import { LoadingSpinner } from "@/components/blocks/LoadingSpinner";
 
 const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
-  ssr: false, // not to render the component on the server
+  ssr: false, // not to render the component on the server, even tho this is a client side. but it's a good practice to add this because it's a dynamic import
 });
 
 type IssueForm = z.infer<typeof createIssueSchema>;

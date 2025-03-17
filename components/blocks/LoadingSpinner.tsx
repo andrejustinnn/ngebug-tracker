@@ -28,3 +28,5 @@ export const LoadingSpinner = ({
     </svg>
   );
 };
+
+export default LoadingSpinner;
