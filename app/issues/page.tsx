@@ -10,9 +10,9 @@ import {
 } from "@/components/ui/table";
 import React from "react";
 import IssueStatusBadge from "@/components/blocks/IssueStatusBadge";
+import ButtonLink from "@/components/blocks/ButtonLink";
 import delay from "delay";
 import IssueAction from "./IssueAction";
-import Link from "next/link";
 
 const IssuesPage = async () => {
   const issues = await prisma.issue.findMany();
@@ -33,7 +33,7 @@ const IssuesPage = async () => {
           {issues.map((issue) => (
             <TableRow key={issue.id}>
               <TableCell className="font-medium flex md:block justify-between items-center">
-                <Link href={`/issues/${issue.id}`}>{issue.title}</Link>
+                <ButtonLink href={`/issues/${issue.id}`}>{issue.title}</ButtonLink>
                 <div className="block md:hidden">
                   <IssueStatusBadge status={issue.status} />
                 </div>

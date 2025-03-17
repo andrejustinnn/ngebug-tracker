@@ -3,6 +3,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import Flex from '@/components/ui/flex'
 import { Heading, Text } from '@/components/ui/typography'
 import { prisma } from '@/prisma/client'
+import delay from 'delay'
 import { notFound } from 'next/navigation'
 import React from 'react'
 import ReactMarkdown from 'react-markdown'
@@ -24,8 +25,10 @@ const IssueDetailPage = async ({ params }: Props) => {
     notFound();
   }
 
+  // await delay(2000);
+
   return (
-    <div>
+    <div className='max-w-xl'>
       <Heading variant="h3">{issue.title}</Heading>
       <Flex gap={2} my={2}>
         <IssueStatusBadge status={issue.status} />
