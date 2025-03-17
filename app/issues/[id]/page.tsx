@@ -1,10 +1,11 @@
 import IssueStatusBadge from '@/components/blocks/IssueStatusBadge'
-import { Card } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import Flex from '@/components/ui/flex'
 import { Heading, Text } from '@/components/ui/typography'
 import { prisma } from '@/prisma/client'
 import { notFound } from 'next/navigation'
 import React from 'react'
+import ReactMarkdown from 'react-markdown'
 
 interface Props {
   params: {
@@ -32,13 +33,13 @@ const IssueDetailPage = async ({ params }: Props) => {
           {issue.createdAt.toDateString()}
         </Text>
       </Flex>
-      <Card>
-
-        <Text>
+      <Card className='prose mt-4'>
+      <CardContent>
+        <ReactMarkdown>
           {issue.description}
-        </Text>
+        </ReactMarkdown>
+      </CardContent>
       </Card>
-
     </div>
   )
 }
