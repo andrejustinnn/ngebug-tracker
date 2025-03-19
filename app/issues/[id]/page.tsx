@@ -1,12 +1,13 @@
 import IssueStatusBadge from '@/components/blocks/IssueStatusBadge'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import Flex from '@/components/ui/flex'
 import { Heading, Text } from '@/components/ui/typography'
 import { prisma } from '@/prisma/client'
-import delay from 'delay'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import React from 'react'
 import ReactMarkdown from 'react-markdown'
+import { Pencil2Icon } from '@radix-ui/react-icons'
 
 interface Props {
   params: {
@@ -28,21 +29,31 @@ const IssueDetailPage = async ({ params }: Props) => {
   // await delay(2000);
 
   return (
-    <div className='max-w-xl'>
-      <Heading variant="h3">{issue.title}</Heading>
-      <Flex gap={2} my={2}>
-        <IssueStatusBadge status={issue.status} />
-        <Text>
-          {issue.createdAt.toDateString()}
-        </Text>
-      </Flex>
-      <Card className='prose mt-4'>
-      <CardContent>
-        <ReactMarkdown>
-          {issue.description}
-        </ReactMarkdown>
-      </CardContent>
-      </Card>
+    <div className='grid grid-cols-2 gap-2 mx-auto'>
+      <div>
+        <Heading variant="h3">{issue.title}</Heading>
+        <Flex gap={2} my={2}>
+          <IssueStatusBadge status={issue.status} />
+          <Text>
+            {issue.createdAt.toDateString()}
+          </Text>
+        </Flex>
+        <Card className='prose mt-4'>
+          <CardContent>
+            <ReactMarkdown>
+              {issue.description}
+            </ReactMarkdown>
+          </CardContent>
+        </Card>
+      </div>
+      <div>
+        <Button>
+          <Pencil2Icon />
+          <Link href={`/issues/${issue.id}/edit`}>
+            Edit
+          </Link>
+        </Button>
+      </div>
     </div>
   )
 }
