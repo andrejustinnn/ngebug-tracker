@@ -50,8 +50,8 @@ const IssueForm = ({issue} : Props) => {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     try {
-      const response = await axios.post("/api/issues", values);
-
+      if(issue) await axios.patch("/api/issues/"+issue.id, values);
+      else await axios.post("/api/issues", values);
       router.push("/issues");
     } catch (error) {
       setError("Ups! Something went wrong. Please try again later.");
