@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AlertDestructive } from "@/components/blocks/AlertDescructive";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createIssueSchema } from "@/app/validationSchema";
+import { issueSchema } from "@/app/validationSchema";
 import { z } from "zod";
 
 // 1. define the interface for the form
@@ -19,7 +19,7 @@ import { z } from "zod";
 //   description: string;
 // }
 // ini kenapa diganti karena kita menggunakan schema zod agar tidak redundan
-type IssueForm = z.infer<typeof createIssueSchema>;
+type IssueForm = z.infer<typeof issueSchema>;
 
 const NewIssuePage = () => {
   const router = useRouter();
@@ -32,7 +32,7 @@ const NewIssuePage = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<IssueForm>({
-    resolver: zodResolver(createIssueSchema),
+    resolver: zodResolver(issueSchema),
   });
   // register ini sebuah function mengeluarkan value attribute umum dari sebuah input seperti onchange on blur dll. jd kita tidak perlu lagi menuliskan manual lgsg di assign aja ke input menggunakan spread oprator
   // console.log(register("title"));

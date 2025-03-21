@@ -17,7 +17,7 @@ import "easymde/dist/easymde.min.css";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createIssueSchema } from "@/app/validationSchema";
+import { issueSchema } from "@/app/validationSchema";
 import { z } from "zod";
 import { LoadingSpinner } from "@/components/blocks/LoadingSpinner";
 import { Issue } from "@prisma/client";
@@ -26,7 +26,7 @@ const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
   ssr: false, // not to render the component on the server, even tho this is a client side. but it's a good practice to add this because it's a dynamic import
 });
 
-type IssueFormData = z.infer<typeof createIssueSchema>;
+type IssueFormData = z.infer<typeof issueSchema>;
 
 interface Props {
   issue?: Issue;
@@ -38,7 +38,7 @@ const IssueForm = ({issue} : Props) => {
 
   // 1. Define your form.
   const form = useForm<IssueFormData>({
-    resolver: zodResolver(createIssueSchema),
+    resolver: zodResolver(issueSchema),
     defaultValues: {
       title: issue?.title || "",
       description: issue?.description || ""
