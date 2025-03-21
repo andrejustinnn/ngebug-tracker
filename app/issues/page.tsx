@@ -11,6 +11,7 @@ import {
 import { prisma } from "@/prisma/client";
 // import delay from "delay";
 import IssueAction from "./IssueAction";
+// import { dynamic } from 'next/dynamic';
 
 const IssuesPage = async () => {
   const issues = await prisma.issue.findMany();
@@ -49,5 +50,15 @@ const IssuesPage = async () => {
     </div>
   );
 };
+
+// page ini static rendering by defaut
+// yg by default dynamic rendering page yang ada paramnya
+
+// caranya untuk buat page ini menjadi dynamic rendering
+export const dynamic = 'force-dynamic'; // tp ini dari sisi server side, kadang dari sisi client blm berubah karena dri sisi client ada cachingnya juga
+export const revalidate = 0; // revalidate setiap 0 detik, tp sm ky force-dynamic 
+
+// untuk client caching, static route akan revalidate stlh 5 menit, dynamic route akan revalidate stlh 30 detik
+
 
 export default IssuesPage;

@@ -53,6 +53,7 @@ const IssueForm = ({issue} : Props) => {
       if(issue) await axios.patch("/api/issues/"+issue.id, values);
       else await axios.post("/api/issues", values);
       router.push("/issues");
+      router.refresh(); // ini refresh agar client side revalidate caching datanya
     } catch (error) {
       setError("Ups! Something went wrong. Please try again later.");
     }
