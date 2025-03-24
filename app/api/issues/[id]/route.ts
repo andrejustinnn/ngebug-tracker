@@ -35,6 +35,7 @@ export async function DELETE(request: NextRequest, {params} : {params: {id: stri
     }
   })
 
+
   if(!issue) return NextResponse.json({error: "Issue not found"}, {status: 404});
 
   await prisma.issue.delete({

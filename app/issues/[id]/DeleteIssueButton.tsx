@@ -1,4 +1,5 @@
 "use client";
+import { LoadingSpinner } from "@/components/blocks";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,17 +15,22 @@ import { Button } from "@/components/ui/button"
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { set } from "zod";
 
 const DeleteIssueButton = ({issueId} : {issueId:number}) => {
 
   const router = useRouter();
   const [error, setError] = useState<boolean>(false);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
   return (
     <>
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button variant="outline" className="w-full">Delete Issue</Button>
+          <Button variant="outline" className="w-full" disabled={isDeleting}>
+            {isDeleting && <LoadingSpinner />}
+            {isDeleting ? "Deleting..." : "Delete Issue"}
+          </Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -38,13 +44,17 @@ const DeleteIssueButton = ({issueId} : {issueId:number}) => {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={async () => {
               try {
+                setIsDeleting(true);
                 await axios.delete("/api/issues/"+issueId);
                 router.push("/issues");
                 router.refresh(); 
               } catch (error) {
+                setIsDeleting(false);
                 setError(true);
               }
-            }}>Delete</AlertDialogAction>
+            }}>
+              Delete
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
