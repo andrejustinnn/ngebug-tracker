@@ -10,21 +10,25 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 // import SimpleMDE from "react-simplemde-editor";
-import dynamic from "next/dynamic";
-import { useForm } from "react-hook-form";
+import { issueSchema } from "@/app/validationSchema";
+import { LoadingSpinner } from "@/components/blocks/LoadingSpinner";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Issue } from "@prisma/client";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { issueSchema } from "@/app/validationSchema";
+import { useForm } from "react-hook-form";
+import SimpleMDE from "react-simplemde-editor";
 import { z } from "zod";
-import { LoadingSpinner } from "@/components/blocks/LoadingSpinner";
-import { Issue } from "@prisma/client";
 
-const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
-  ssr: false, // not to render the component on the server, even tho this is a client side. but it's a good practice to add this because it's a dynamic import
-});
+// 3. Import the SimpleMDE component dynamically.
+// Tapi karena simple mde ini di import dynamic, jadi ada keliatan saat ahlaman di render
+// simple mdenya telat baru tampil.
+// jadi untuk improve loading experience kita bisa import simplemde secara static, TAPI Form ini di import secara dynamic
+// const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
+//   ssr: false, // not to render the component on the server, even tho this is a client side. but it's a good practice to add this because it's a dynamic import
+// }); 
 
 type IssueFormData = z.infer<typeof issueSchema>;
 
