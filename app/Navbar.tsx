@@ -68,12 +68,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-
+import Skeleton from "@/components/blocks/Skeleton";
 const AuthStatus = () => {
   const { status, data:session } = useSession();
 
   if (status === "loading") {
-    return <div>Loading...</div>;
+    return <Skeleton width="3rem" />;
   }
 
   if (status === "unauthenticated") {
