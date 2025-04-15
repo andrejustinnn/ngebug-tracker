@@ -1,6 +1,7 @@
 "use client";
 
 import classnames from "classnames";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
@@ -8,6 +9,7 @@ import { TbBugFilled } from "react-icons/tb";
 
 const Navbar = () => {
   const currentPath = usePathname();
+  const {status, data: session} = useSession();
   const links = [
     {
       href: "/",
@@ -42,6 +44,24 @@ const Navbar = () => {
           </li>
         ))}
       </ul>
+      <div>
+        {status === "authenticated" && (
+          <Link
+            href="/api/auth/signout"
+            className="text-zinc-500 hover:text-zinc-800 transition-colors"
+          >
+            Sign out
+          </Link>
+        )}
+        {status === "unauthenticated" && (
+          <Link
+            href="/api/auth/signin"
+            className="text-zinc-500 hover:text-zinc-800 transition-colors"
+          >
+            Sign in
+            </Link>
+            )}
+      </div>
     </nav>
   );
 };
