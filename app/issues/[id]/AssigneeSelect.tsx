@@ -9,6 +9,10 @@ import {
 
 
 const AssigneeSelect = () => {
+
+  //  ini client component dan gabisa akses prisma di client component
+  // prisma hanya ada di server component maka harus pake use effect untuk ambil data dari server component
+  
   return (
     <Select>
       <SelectTrigger className="w-full">
@@ -16,7 +20,6 @@ const AssigneeSelect = () => {
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="1">Andre Justin</SelectItem>
-        <SelectItem value="2">Cynthia</SelectItem>
       </SelectContent>
     </Select>
 
