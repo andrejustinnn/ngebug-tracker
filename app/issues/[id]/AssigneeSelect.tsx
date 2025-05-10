@@ -6,10 +6,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import Skeleton from '@/components/blocks/Skeleton';
+import {Skeleton} from '@/components/blocks';
 import { Issue, User } from '@prisma/client';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
+import toast, {Toaster} from 'react-hot-toast'
 
 
 const AssigneeSelect = ({ issue }: {issue: Issue}) => {
@@ -21,18 +22,24 @@ const AssigneeSelect = ({ issue }: {issue: Issue}) => {
   });
 
   const handleValueChange = async (userId: string) => {
-    await axios.patch(`/api/issues/${issue.id}`,{
-      assignedToUserId: userId === 'Unassigned' ? null : userId
-    })
+    try{
+      await axios.patch(`/api/issues/${issue.id}`,{
+        assignedToUserId: userId === 'Unassigned' ? null : userId
+      })
+    }catch{
+      toast.error('Changes could not be saved.')
+    }
   }
 
-  if(isLoading) return <Skeleton width="10rem" />
+  if(isLoading) return <Skeleton />
 
   if(error) {
     return null;
   }
 
   return (
+    <>
+    
     <Select onValueChange={(userId) => handleValueChange(userId)}
       defaultValue={issue.assignedToUserId || 'Unassigned'}>
       <SelectTrigger className="w-full">
@@ -43,6 +50,8 @@ const AssigneeSelect = ({ issue }: {issue: Issue}) => {
         {users?.map(user => <SelectItem key={user.id} value={user.id}>{user.name}</SelectItem>)}
       </SelectContent>
     </Select>
+    <Toaster />
+    </>
 
   )
 }
