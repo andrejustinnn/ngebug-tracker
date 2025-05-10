@@ -1,4 +1,4 @@
-import { issueSchema } from "@/app/validationSchema";
+import { issueSchema, patchIssueSchema } from "@/app/validationSchema";
 import { prisma } from "@/prisma/client";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
@@ -13,9 +13,21 @@ export async function PATCH (request: NextRequest, {params} : {params: {id: stri
   }
   const body = await request.json();
 
-  const validation = issueSchema.safeParse(body);
+  const validation = patchIssueSchema.safeParse(body);
 
   if(!validation.success) return NextResponse.json(validation.error.format(), {status: 400});
+
+  const {title, description, assignedToUserId} = body
+
+  if(assignedToUserId){
+    const user = await prisma.user.findUnique({
+      where: {
+        id: assignedToUserId
+      }
+    })
+
+    if(!user) return NextResponse.json({error: 'User not found.'}, {status: 400});
+  }
 
   const issue = await prisma.issue.findUnique({
     where: {
@@ -28,8 +40,10 @@ export async function PATCH (request: NextRequest, {params} : {params: {id: stri
   const updatedIssue = await prisma.issue.update({
     where: { id: issue.id },
     data: {
-      title: body.title,
-      description: body.description
+      title,
+      description,
+      assignedToUserId
+      // ketika salah satu ini undefined, gak akan ke update menjadi null atau undefined 
     }
   });
 
