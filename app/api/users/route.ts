@@ -1,3 +1,4 @@
+import { prisma } from '@/prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
 // untuk menghindari caching dari browser maka parameter next request ttp dipakai. walaupun tidak digunakan
