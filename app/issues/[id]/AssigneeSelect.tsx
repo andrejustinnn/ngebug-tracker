@@ -14,12 +14,7 @@ import toast, {Toaster} from 'react-hot-toast'
 
 
 const AssigneeSelect = ({ issue }: {issue: Issue}) => {
-  const {data: users, error, isLoading} = useQuery<User[]>({
-    queryKey: ['users'],
-    queryFn: () => axios.get('/api/users').then(res=>res.data),
-    staleTime: 60*1000, // 60s
-    retry:3, // means 1 + 3 additional request will be sent if begining request failed.
-  });
+  const {data: users, error, isLoading} = useUsers();
 
   const handleValueChange = async (userId: string) => {
     try{
@@ -40,7 +35,7 @@ const AssigneeSelect = ({ issue }: {issue: Issue}) => {
   return (
     <>
     
-    <Select onValueChange={(userId) => handleValueChange(userId)}
+    <Select onValueChange={handleValueChange}
       defaultValue={issue.assignedToUserId || 'Unassigned'}>
       <SelectTrigger className="w-full">
         <SelectValue placeholder="Assign to.." />
@@ -55,5 +50,12 @@ const AssigneeSelect = ({ issue }: {issue: Issue}) => {
 
   )
 }
+
+const useUsers = () => useQuery<User[]>({
+    queryKey: ['users'],
+    queryFn: () => axios.get('/api/users').then(res=>res.data),
+    staleTime: 60*1000, // 60s
+    retry:3, // means 1 + 3 additional request will be sent if begining request failed.
+  });
 
 export default AssigneeSelect
