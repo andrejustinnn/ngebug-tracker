@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "./Navbar";
 import AuthProvider from "./auth/Provider";
+import QueryClientProvider from "./QueryClientProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -22,15 +23,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} antialiased`}>
-        <AuthProvider>
+        <QueryClientProvider>
+          <AuthProvider>
 
-        <Navbar />
-        <main className="p-6">
-          <div className="container mx-auto">
-          {children}
-          </div>
-        </main>
-        </AuthProvider>
+          <Navbar />
+          <main className="p-6">
+            <div className="container mx-auto">
+            {children}
+            </div>
+          </main>
+          </AuthProvider>
+        </QueryClientProvider>
       </body>
     </html>
   );
