@@ -1,4 +1,5 @@
-import React from 'react'
+'use client'
+import { useEffect, useState } from 'react'
 import {
   Select,
   SelectContent,
@@ -6,20 +7,30 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { User } from '@prisma/client';
+import axios from 'axios';
 
 
 const AssigneeSelect = () => {
 
-  //  ini client component dan gabisa akses prisma di client component
-  // prisma hanya ada di server component maka harus pake use effect untuk ambil data dari server component
-  
+  const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const {data} = await axios.get<User[]>('/api/users');
+      setUsers(data);
+    }
+
+    fetchUsers();
+  }, []);
+
   return (
     <Select>
       <SelectTrigger className="w-full">
         <SelectValue placeholder="Assign to.." />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="1">Andre Justin</SelectItem>
+        {users.map(user => <SelectItem key={user.id} value={user.id}>{user.name}</SelectItem>)}
       </SelectContent>
     </Select>
 
