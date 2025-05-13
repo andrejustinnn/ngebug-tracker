@@ -11,16 +11,32 @@ import {
 import { prisma } from "@/prisma/client";
 // import delay from "delay";
 import IssueAction from "./IssueAction";
-import { Status } from "@prisma/client";
+import { Issue, Status } from "@prisma/client";
+import NextLink from "next/link";
+import { ArrowDownIcon, ArrowUpIcon } from "@radix-ui/react-icons";
 // import { dynamic } from 'next/dynamic';
+
+type Sort = "ASC" | "DESC" | undefined;
 
 interface Props {
   searchParams: {
-    status: Status
+    status: Status,
+    orderBy: keyof Issue,
+    sort: Sort
   }
 }
 
 const IssuesPage = async ({searchParams}: Props) => {
+
+  const columns: {
+    label:string, 
+    value: keyof Issue,
+    className?: string}[] = [
+    {label: 'Issue', value: "title",},
+    {label: 'Status', value: 'status', className: 'hidden md:table-cell'},
+    {label: 'Created', value: 'createdAt', className: 'hidden md:table-cell'},
+  ]
+
   const statuses = Object.values(Status);
   const status = statuses.includes(searchParams.status) ? searchParams.status : undefined; // undefined agar prisma tidak anggap filtering ini
   const issues = await prisma.issue.findMany({
@@ -28,6 +44,13 @@ const IssuesPage = async ({searchParams}: Props) => {
       status
     }
   });
+  const sortControl = (orderBy: keyof Issue) => {
+    
+    if (searchParams.orderBy === orderBy) {
+      return searchParams.sort === 'ASC' ? 'DESC' : 'ASC';
+    }
+    return 'ASC';
+  }
   // await delay(2000);
   return (
     <div className="space-y-6">
@@ -36,9 +59,20 @@ const IssuesPage = async ({searchParams}: Props) => {
         <TableCaption>A list of recent issues</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead>Title</TableHead>
-            <TableHead className="hidden md:table-cell">Status</TableHead>
-            <TableHead className="hidden md:table-cell">Created</TableHead>
+            {columns.map(column => <TableHead key={column.value} className={column.className}>
+              <NextLink href={{ 
+                query: {
+                  ...searchParams, 
+                  orderBy: column.value, 
+                  sort: sortControl(column.value)
+                }
+               }}>
+                {column.label}
+               </NextLink>
+               {column.value === searchParams.orderBy && 
+               ( searchParams.sort === 'ASC' ? <ArrowUpIcon className="inline"/>: <ArrowDownIcon className="inline"/>)
+               }
+            </TableHead>)}
           </TableRow>
         </TableHeader>
         <TableBody>
