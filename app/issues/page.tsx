@@ -4,6 +4,7 @@ import Pagination from "@/components/blocks/Pagination";
 import { Status } from "@prisma/client";
 import IssueAction from "./IssueAction";
 import IssueTable, { columnNames, IssueQuery } from "./IssueTable";
+import { Metadata } from "next";
 // import { dynamic } from 'next/dynamic';
 
 interface Props {
@@ -63,3 +64,9 @@ export const revalidate = 0; // revalidate setiap 0 detik, tp sm ky force-dynami
 
 
 export default IssuesPage;
+
+export const metadata: Metadata = {
+  title: 'Issue Tracker - Issue List',
+  description: 'View all issues',
+  keywords: 'issue tracker, issue list',
+}

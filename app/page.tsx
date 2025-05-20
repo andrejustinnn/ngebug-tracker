@@ -2,6 +2,7 @@ import { prisma } from "@/prisma/client";
 import IssueSummary from "./IssueSummary";
 import LatestIssues from "./LatestIssues";
 import IssueChart from "./IssueChart";
+import { Metadata } from "next";
 
 export default async function Home() {
 
@@ -31,4 +32,10 @@ export default async function Home() {
     </div>
     // <IssueSummary open={open} inProgress={inProgress} done={done} />
   );
+}
+
+export const metadata: Metadata = {
+  title: 'Issue Tracker - Dashboard',
+  description: 'View a summary of your issues',
+  keywords: 'issue tracker, dashboard, summary',
 }
