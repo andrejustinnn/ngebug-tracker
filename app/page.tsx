@@ -1,9 +1,7 @@
-import { Button } from "@/components/ui/button";
+import LatestIssues from "./LatestIssues";
 
 export default function Home() {
   return (
-    <div>
-      <Button>Click me</Button>
-    </div>
+    <LatestIssues />
   );
 }
