@@ -14,19 +14,24 @@ import IssueAction from "./IssueAction";
 import { Issue, Status } from "@prisma/client";
 import NextLink from "next/link";
 import { ArrowDownIcon, ArrowUpIcon } from "@radix-ui/react-icons";
+import Pagination from "@/components/blocks/Pagination";
 // import { dynamic } from 'next/dynamic';
 
-type Sort = "ASC" | "DESC" | undefined;
+type Sort = "asc" | "desc" | undefined;
 
 interface Props {
   searchParams: {
-    status: Status,
+    filterStatus: Status
     orderBy: keyof Issue,
-    sort: Sort
+    sort: Sort,
   }
 }
 
-const IssuesPage = async ({searchParams}: Props) => {
+const IssuesPage = async ({
+  searchParams
+}: Props) => {
+
+  console.log(searchParams.filterStatus, searchParams.orderBy);
 
   const columns: {
     label:string, 
@@ -36,49 +41,51 @@ const IssuesPage = async ({searchParams}: Props) => {
     {label: 'Status', value: 'status', className: 'hidden md:table-cell'},
     {label: 'Created', value: 'createdAt', className: 'hidden md:table-cell'},
   ]
+  // console.log(searchParams.filterStatus, searchParams.orderBy, searchParams.sort);
 
   const statuses = Object.values(Status);
-  const status = statuses.includes(searchParams.status) ? searchParams.status : undefined; // undefined agar prisma tidak anggap filtering ini
+  const status = statuses.includes(searchParams.filterStatus) ? searchParams.filterStatus : undefined; // undefined agar prisma tidak anggap filtering ini
 
-  // valid orderby 
+  // // valid orderby
   const isValidOrderBy = columns.map(column => column.value).includes(searchParams.orderBy);
   const orderBy = isValidOrderBy ? {
-    [searchParams.orderBy]: searchParams.sort === 'ASC' ? 'asc' : 'desc'
+    [searchParams.orderBy]: searchParams.sort === 'asc' ? 'asc' : 'desc'
   } : undefined;
-
   const issues = await prisma.issue.findMany({
     where: {
       status
     },
     orderBy: orderBy,
   });
-  const sortControl = (orderBy: keyof Issue) => {
-    
-    if (searchParams.orderBy === orderBy) {
-      return searchParams.sort === 'ASC' ? 'DESC' : 'ASC';
+  const sortControl = (issue: keyof Issue) => {
+
+    if (searchParams.orderBy === issue) {
+      return searchParams.sort === 'asc' ? 'desc' : 'asc';
     }
-    return 'ASC';
+    return 'asc';
   }
   // await delay(2000);
   return (
     <div className="space-y-6">
       <IssueAction />
       <Table>
-        <TableCaption>A list of recent issues</TableCaption>
+        {/* <TableCaption>A list of recent issues</TableCaption> */}
         <TableHeader>
           <TableRow>
             {columns.map(column => <TableHead key={column.value} className={column.className}>
               <NextLink href={{ 
                 query: {
-                  ...searchParams, 
-                  orderBy: column.value, 
+                  // ...searchParams,
+                  filterStatus: searchParams.filterStatus,
+                  orderBy: column.value,
+                  // sort: 'asc'
                   sort: sortControl(column.value)
                 }
                }}>
                 {column.label}
                </NextLink>
                {column.value === searchParams.orderBy && 
-               ( searchParams.sort === 'ASC' ? <ArrowUpIcon className="inline"/>: <ArrowDownIcon className="inline"/>)
+               ( searchParams.sort === 'asc' ? <ArrowUpIcon className="inline"/>: <ArrowDownIcon className="inline"/>)
                }
             </TableHead>)}
           </TableRow>
@@ -102,6 +109,11 @@ const IssuesPage = async ({searchParams}: Props) => {
           ))}
         </TableBody>
       </Table>
+      <Pagination
+        itemCount={issues.length}
+        pageSize={5}
+        currentPage={0}
+      />
     </div>
   );
 };
