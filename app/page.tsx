@@ -22,8 +22,13 @@ export default async function Home() {
   });
 
   return (
-    <IssueChart open={open} inProgress={inProgress} done={done} />
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="flex flex-col gap-4">
+        <IssueSummary open={open} inProgress={inProgress} done={done} />
+        <IssueChart open={open} inProgress={inProgress} done={done} />
+      </div>
+      <LatestIssues />
+    </div>
     // <IssueSummary open={open} inProgress={inProgress} done={done} />
-    // <LatestIssues />
   );
 }
